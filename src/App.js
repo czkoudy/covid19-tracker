@@ -2,14 +2,18 @@ import { Card, CardContent, FormControl, MenuItem, Select } from "@material-ui/c
 import { useEffect, useState } from "react";
 import "./App.css";
 import Infobox from "./Infobox";
+import LineGraph from "./LineGraph";
 import Map from "./Map";
 import Table from "./Table";
 import { sortData } from "./util";
+import "leaflet/dist/leaflet.css";
 // BEM naming convention
 function App() {
   const [countries, setCountries] = useState([]);
   const [country, setCountry] = useState("worldwide");
   const [countryInfo, setcountryInfo] = useState({});
+  const [mapCenter, setMapCenter] = useState({ lat: 34.086, lng: -40.4796 });
+  const [mapZoom, setMapZoom] = useState(3);
 
   // https://disease.sh/v3/covid-19/countries
   useEffect(() => {
@@ -48,6 +52,8 @@ function App() {
       .then((resp) => resp.json())
       .then((data) => {
         setcountryInfo(data);
+        setMapCenter({ lat: data.countryInfo.lat, lng: data.countryInfo.long });
+        setMapZoom(4);
       });
   };
 
@@ -76,13 +82,14 @@ function App() {
           <Infobox title="Deaths" cases={countryInfo.todayDeaths} total={countryInfo.deaths}></Infobox>
         </div>
 
-        <Map />
+        <Map center={mapCenter} zoom={mapZoom} />
       </div>
       <Card className="app__right">
         <CardContent>
           <div className="app__information">
             <h3>Live Cases by Country</h3>
             <Table countries={countries} />
+            <LineGraph />
           </div>
         </CardContent>
       </Card>
