@@ -1,5 +1,7 @@
 .map {
+  padding: 10px 10px 10px 10px;
   height: 500px;
+  border-radius: 20px;
   background-color: white;
 }
 
